@@ -12,7 +12,8 @@ import PlayerStats from './components/PlayerStats'
 
 const test = [
   {
-    player: 'Sample Player',
+    Player: 'Sample Player',
+    Season: 'xxxx-xxxx',
     PTS: 20,
     AST: 5,
     REB: 10,

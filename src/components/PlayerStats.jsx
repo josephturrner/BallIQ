@@ -6,11 +6,12 @@ function PlayerStats({data}) {
     <ChakraProvider>
       <Box p={4}>
         <Heading as="h1" size="lg" p={8} mb={4} textAlign="center">
-          {data[0].player} Statistics
+          {data[0].Player} Statistics
         </Heading>
-        <Table variant="simple">
+        <Table textAlign="center" variant="simple">
           <Thead>
             <Tr>
+              <Th>Season</Th>
               <Th>PTS</Th>
               <Th>AST</Th>
               <Th>REB</Th>
@@ -26,6 +27,7 @@ function PlayerStats({data}) {
           <Tbody>
             {data.map((item, index) => (
               <Tr key={index}>
+                <Td>{item.Season}</Td>
                 <Td>{item.PTS}</Td>
                 <Td>{item.AST}</Td>
                 <Td>{item.REB}</Td>
