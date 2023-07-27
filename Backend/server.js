@@ -1,11 +1,17 @@
-// server.js
 const express = require('express');
 const bodyParser = require('body-parser');
 const { exec } = require('child_process');
 const mysql = require('mysql2');
+const cors = require('cors');
 
 const app = express();
-const port = 8801; // Choose a port for your server
+const port = 8081;
+
+const corsOptions = {
+  origin: 'http://localhost:3000',
+};
+
+app.use(cors(corsOptions));
 
 // Middleware to parse incoming JSON data
 app.use(bodyParser.json());

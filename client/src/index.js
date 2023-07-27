@@ -9,9 +9,10 @@ import {
 } from 'react-router-dom'
 
 // layouts and pages
-import Homepage from './pages/Homepage'
-import PlayerStats from './pages/PlayerStats'
+import Homepage from './Homepage'
+import PlayerStats from './PlayerStats'
 import { ChakraProvider } from '@chakra-ui/react'
+import myTheme from './theme'
 
 const player1 = [
   {
@@ -96,6 +97,11 @@ function App() {
     <RouterProvider router={router} />
   )
 }
+
+// 3. Pass the new theme to `ChakraProvider`
+<ChakraProvider theme={myTheme} cssVarsRoot="body" >
+  <App />
+</ChakraProvider>
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
