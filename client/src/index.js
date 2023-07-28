@@ -87,7 +87,7 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Outlet />}>
       <Route index element={<Homepage />} />
-      <Route path="stats" element={<PlayerStats data={player1}/>} />
+      <Route path="/players/:playerId" element={<PlayerStats data={player1} />} />
     </Route>
   )
 )

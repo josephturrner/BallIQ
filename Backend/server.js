@@ -68,8 +68,8 @@ app.post('/add-data', (req, res) => {
   });
 });
 
-// Endpoint for fetching data from database
-app.get('/fetch-data', async (req, res) => {
+// Endpoint for searching for player from database
+app.get('/search-players', async (req, res) => {
   const searchQuery = req.query.q; // Extract the search query from the request query parameters
 
   try {
@@ -104,6 +104,32 @@ app.get('/fetch-data', async (req, res) => {
     console.error('Error fetching data:', error);
     res.status(500).json({ error: 'An error occurred while fetching data from the database.' });
   }
+});
+
+// Endpoint to execute a Python script based on the playerId received from the HTTP request
+app.get('/player-stats/:playerId', (req, res) => {
+  const { playerId } = req.params;
+
+  // Construct the Python command based on the playerId
+  const pythonCommand = `python3 python-scripts/fetch-player-stats.py ${playerId}`;
+
+  exec(pythonCommand, (error, stdout, stderr) => {
+    if (error) {
+      console.error(`Error executing the Python command: ${error.message}`);
+      return res.status(500).json({ error: 'An error occurred while running the Python command.' });
+    }
+
+    // Assuming your Python script outputs data in JSON format
+    let playerStatsData;
+    try {
+      playerStatsData = JSON.parse(stdout);
+    } catch (parseError) {
+      console.error('Error parsing the Python output:', parseError);
+      return res.status(500).json({ error: 'An error occurred while parsing the Python output.' });
+    }
+
+    res.json(playerStatsData);
+  });
 });
 
 // Start the server

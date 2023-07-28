@@ -7,6 +7,7 @@ const myTheme = extendTheme({
             lightorange: "#f58e38",
             black: "#212121",
             gray: "#666565",
+            lightgray: "#a8a8a8",
             white: "#d4d4d4"
         },
     },

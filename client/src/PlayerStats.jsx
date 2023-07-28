@@ -1,41 +1,69 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Heading, Table, Thead, Tbody, Tr, Th, Td, Flex } from '@chakra-ui/react';
-
-// PlayerDetailsPage.js
 import { useParams } from 'react-router-dom';
+import axios from 'axios';
 
-
-function PlayerStats({ data }) {
-  
+function PlayerStats() {
   const { playerId } = useParams();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [playerStatsData, setPlayerStatsData] = useState([]);
+
+  useEffect(() => {
+    const fetchPlayerStats = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8081/player-stats/${playerId}`);
+        setPlayerStatsData(response.data);
+        setLoading(false);
+        setError(null);
+      } catch (error) {
+        console.error('Error fetching player stats:', error);
+        setError('Error fetching player stats. Please try again later.');
+        setLoading(false);
+      }
+    };
+
+    fetchPlayerStats();
+  }, [playerId]);
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  if (error) {
+    return <p>{error}</p>;
+  }
 
   return (
-    <Box px={8} minHeight="100vh" display="flex" flexDirection="column" alignItems="center" bgGradient="linear(to-br, blackAlpha.800, blackAlpha.900)" boxShadow="md" overflow="auto" >
-      <Flex textAlign="center" align="center" justify="center" width="85%" textColor="whiteAlpha.700" py={2} my={4} mx="auto" borderRadius={24} >
-        <Heading as="h1" fontSize={48} px={8} textDecoration="underline">
-          {data[0].Player} Statistics
+    <Box bg="#212121" px={8} minHeight="100vh" display="flex" flexDirection="column" alignItems="center" overflow="auto" >
+      <Flex direction="column" textAlign="center" align="center" justify="center" width="85%" textColor="#d4d4d4" mx="auto" borderRadius={24} >
+        <Flex textAlign="center" align="center" justify="center" width="75%" textColor="ball.white" py={2} mt={4} mb={8} mx="auto" borderRadius={24}>
+          <Heading as="h1" fontSize={60} px={8} textDecoration="underline" bgGradient="linear(to-br, #e6791e, #666565)" bgClip="text">Ball IQ</Heading>
+          <img src="./basketball-2.webp" alt="Ball-IQ Logo" width={64} height={64} />
+        </Flex>
+        <Heading fontSize={24} textColor="#d4d4d4">
+          {playerStatsData[0].Player}
         </Heading>
-        <img src="./basketball-2.webp" alt="Ball-IQ Logo" width={64} height={64} />
       </Flex>
       <Box overflowX="auto" mx="auto" width="100%">
         <Table textAlign="center" width="85%" mx="auto">
           <Thead>
             <Tr>
-              <Th color="orange.600" textAlign="center">Season</Th>
-              <Th color="orange.600" textAlign="center">PTS</Th>
-              <Th color="orange.600" textAlign="center">AST</Th>
-              <Th color="orange.600" textAlign="center">REB</Th>
-              <Th color="orange.600" textAlign="center">TOV</Th>
-              <Th color="orange.600" textAlign="center">FG%</Th>
-              <Th color="orange.600" textAlign="center">2P%</Th>
-              <Th color="orange.600" textAlign="center">3P%</Th>
-              <Th color="orange.600" textAlign="center">FT%</Th>
-              <Th color="orange.600" textAlign="center">eFG%</Th>
-              <Th color="orange.600" textAlign="center">Shooter Grade</Th>
+              <Th color="#e6791e" textAlign="center">Season</Th>
+              <Th color="#e6791e" textAlign="center">PTS</Th>
+              <Th color="#e6791e" textAlign="center">AST</Th>
+              <Th color="#e6791e" textAlign="center">REB</Th>
+              <Th color="#e6791e" textAlign="center">TOV</Th>
+              <Th color="#e6791e" textAlign="center">FG%</Th>
+              <Th color="#e6791e" textAlign="center">2P%</Th>
+              <Th color="#e6791e" textAlign="center">3P%</Th>
+              <Th color="#e6791e" textAlign="center">FT%</Th>
+              <Th color="#e6791e" textAlign="center">eFG%</Th>
+              <Th color="#e6791e" textAlign="center">Shooter Grade</Th>
             </Tr>
           </Thead>
-          <Tbody bgColor="whiteAlpha.700">
-            {data[0].Seasons.map((season, index) => (
+          <Tbody bgColor="#d4d4d4">
+            {playerStatsData[0].Seasons.map((season, index) => (
               <Tr key={index} borderWidth={0}>
                 <Td textAlign="center">{season.Season}</Td>
                 <Td textAlign="center">{season.PTS}</Td>
