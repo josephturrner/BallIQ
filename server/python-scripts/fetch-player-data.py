@@ -44,48 +44,70 @@ def newSeason():
     return SEASON_FORMAT
 
 
-def getShooterGrade(player_fga, player_fgm, season_id):
+def getShooterGrade(player_2_fga, player_2_fgm, player_3_fga, player_3_fgm, season_id):
 
     stats = json.loads(sc.ShotChartLeagueWide(league_id='00', season=season_id).get_json())
 
-    fga = 0
-    fgm = 0
+    fga_2 = 0
+    fgm_2 = 0
+
+    fga_3 = 0
+    fgm_3 = 0
 
     for shotType in stats['resultSets'][0]['rowSet']:
-        fga += shotType[4]
-        fgm += shotType[5]
+        if "3" in shotType[1]:
+            fga_3 += shotType[4]
+            fgm_3 += shotType[5]
+        else:
+            fga_2 += shotType[4]
+            fgm_2 += shotType[5]
 
-    fg_pct = fgm/fga
-    pct_of_shots = player_fga/fga
+    fg_2_pct = fgm_2/fgm_2
+    fg_3_pct = fgm_3/fgm_3
 
-    grade_num = ((player_fgm/player_fga - fg_pct)*(pct_of_shots)*10000)
+    player_fg_2_pct = player_2_fgm/player_2_fga
 
-    if grade_num > 0.01:
-        grade = 'A+'
-    elif grade_num > 0.0085:
-        grade = 'A'
-    elif grade_num > 0.006:
-        grade = 'A-'
-    elif grade_num > 0.0045:
-        grade = 'B+'
-    elif grade_num > 0.003:
-        grade = 'B'
-    elif grade_num > 0.0015:
-        grade = 'B-'
-    elif grade_num > 0.00001:
-        grade = 'C+'
-    elif grade_num > 0.00001:
-        grade = 'C'
-    elif grade_num > -0.0015:
-        grade = 'C-'
-    elif grade_num > 0.003:
-        grade = 'D+'
-    elif grade_num > 0.0045:
-        grade = 'D-'
+    if player_3_fga == 0:
+        player_fg_3_pct = 0
     else:
-        grade = 'D+'
+        player_fg_3_pct = player_3_fgm/player_3_fga
+
+    shooting_2_eff = player_fg_2_pct/fg_2_pct
+    shooting_3_eff = player_fg_3_pct/fg_3_pct
+
+    shot_volume_2 = player_2_fga/fga_2
+    shot_volume_3 = player_3_fga/fga_3
+
+    weight_volume = 0.3
+    weight_eff = 0.7
+
+    grade_2P = (weight_eff*shooting_2_eff) + (weight_volume*shot_volume_2)
+    grade_3P = (weight_eff*shooting_3_eff) + (weight_volume*shot_volume_3)
+
+    weight_2 = 0.6
+    weight_3 = 0.9
+
+    grade_num = (weight_2*grade_2P) + (weight_3*grade_3P)
     
-    return grade
+
+    grade_map = {
+        (0.55, float('inf')): 'A+',
+        (0.5, 0.55): 'A',
+        (0.475, 0.5): 'A-',
+        (0.45, 0.475): 'B+',
+        (0.425, 0.45): 'B',
+        (0.4, 0.425): 'B-',
+        (0.375, 0.4): 'C+',
+        (0.35, 0.375): 'C',
+        (0.325, 0.35): 'C-',
+        (0.3, 0.325): 'D+',
+        (0.275, 0.3): 'D-',
+        (-float('inf'), 0.275): 'F',
+    }
+
+    for grade_range, grade in grade_map.items():
+        if grade_num > grade_range[0] and grade_num <= grade_range[1]:
+            return grade
 
 
 # Formats data in single JSON object to be sent to frontend
@@ -129,7 +151,7 @@ def formatData(input_stats):
             if field != 'PLAYER_ID' and field != 'LEAGUE_ID':
                 sendStats['regular_season']['seasons'][season][field] = season_reg_stats['data'][season][index]
         
-        sendStats['regular_season']['seasons'][season]['SHOOTER_GRADE'] = getShooterGrade(sendStats['regular_season']['seasons'][season]['FGA'], sendStats['regular_season']['seasons'][season]["FGM"], sendStats['regular_season']['seasons'][season]["SEASON_ID"])
+        sendStats['regular_season']['seasons'][season]['SHOOTER_GRADE'] = getShooterGrade(sendStats['regular_season']['seasons'][season]['FGA'] - sendStats['regular_season']['seasons'][season]['FG3A'], sendStats['regular_season']['seasons'][season]["FGM"] - sendStats['regular_season']['seasons'][season]['FG3M'], sendStats['regular_season']['seasons'][season]['FG3A'], sendStats['regular_season']['seasons'][season]['FG3M'], sendStats['regular_season']['seasons'][season]["SEASON_ID"])
 
     # Init career season
     sendStats['regular_season']['career'] = newSeason()
@@ -159,7 +181,8 @@ def formatData(input_stats):
             if field != 'PLAYER_ID' and field != 'LEAGUE_ID':
                 sendStats['playoffs']['seasons'][season][field] = season_playoff_stats['data'][season][index]
         
-        sendStats['playoffs']['seasons'][season]['SHOOTER_GRADE'] = getShooterGrade(sendStats['playoffs']['seasons'][season]["FGA"], sendStats['playoffs']['seasons'][season]["FGM"], sendStats['playoffs']['seasons'][season]["SEASON_ID"])
+        sendStats['playoffs']['seasons'][season]['SHOOTER_GRADE'] = getShooterGrade(sendStats['playoffs']['seasons'][season]['FGA'] - sendStats['playoffs']['seasons'][season]['FG3A'], sendStats['playoffs']['seasons'][season]["FGM"] - sendStats['playoffs']['seasons'][season]['FG3M'], sendStats['playoffs']['seasons'][season]['FG3A'], sendStats['playoffs']['seasons'][season]['FG3M'], sendStats['playoffs']['seasons'][season]["SEASON_ID"])
+
 
     # Init career season
     sendStats['playoffs']['career'] = newSeason()
