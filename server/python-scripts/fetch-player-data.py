@@ -65,7 +65,11 @@ def getShooterGrade(player_2_fga, player_2_fgm, player_3_fga, player_3_fgm, seas
     fg_2_pct = fgm_2/fgm_2
     fg_3_pct = fgm_3/fgm_3
 
-    player_fg_2_pct = player_2_fgm/player_2_fga
+
+    if player_2_fga == 0:
+        player_fg_2_pct = 0
+    else:
+        player_fg_2_pct = player_2_fgm/player_2_fga
 
     if player_3_fga == 0:
         player_fg_3_pct = 0
