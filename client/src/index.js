@@ -14,80 +14,12 @@ import PlayerStats from './PlayerStats'
 import { ChakraProvider } from '@chakra-ui/react'
 import myTheme from './theme'
 
-const player1 = [
-  {
-    Player: 'Jayson Tatum',
-    Team: 'Boston Celtics',
-    Seasons: [{
-      Season: 'xxxx-xxxx',
-      PTS: 20,
-      AST: 5,
-      REB: 10,
-      TOV: 2,
-      FGPercentage: 50,
-      TwoPPercentage: 60,
-      ThreePPercentage: 40,
-      FTPercentage: 85,
-      eFGPercentage: 55,
-      ShooterGrade: 'A',
-    },
-    {
-      Season: 'xxxx-xxxx',
-      PTS: 25,
-      AST: 3,
-      REB: 8,
-      TOV: 2.3,
-      FGPercentage: 53,
-      TwoPPercentage: 61,
-      ThreePPercentage: 38,
-      FTPercentage: 83,
-      eFGPercentage: 52,
-      ShooterGrade: 'C+',
-    }]
-  },
-  // Add more data objects as needed
-];
-
-const player2 = [
-  {
-    Player: 'Jaylen Brown',
-    Team: 'Boston Celtics',
-    Seasons: [{
-      Season: 'xxxx-xxxx',
-      PTS: 20,
-      AST: 5,
-      REB: 10,
-      TOV: 2,
-      FGPercentage: 50,
-      TwoPPercentage: 60,
-      ThreePPercentage: 40,
-      FTPercentage: 85,
-      eFGPercentage: 55,
-      ShooterGrade: 'A',
-    },
-    {
-      Season: 'xxxx-xxxx',
-      PTS: 25,
-      AST: 3,
-      REB: 8,
-      TOV: 2.3,
-      FGPercentage: 53,
-      TwoPPercentage: 61,
-      ThreePPercentage: 38,
-      FTPercentage: 83,
-      eFGPercentage: 52,
-      ShooterGrade: 'C+',
-    }]
-  },
-  // Add more data objects as needed
-];
-
 // router and routes
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Outlet />}>
       <Route index element={<Homepage />} />
-      <Route path="/players/:playerId" element={<PlayerStats data={player1} />} />
+      <Route path="/players/:playerId" element={<PlayerStats />} />
     </Route>
   )
 )

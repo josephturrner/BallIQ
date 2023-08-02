@@ -1,19 +1,25 @@
 // HomePage.js
 import { useState } from 'react';
-import { Button, Box, Heading, Input, Flex, VStack, Text } from '@chakra-ui/react';
+import { Button, Box, Heading, Input, Flex, VStack } from '@chakra-ui/react';
 import axios from 'axios';
 
 const HomePage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
-  const [error, setError] = useState(null);
+  const setError = useState(null)[1];
 
   const handleSearch = async () => {
     try {
-      const response = await axios.get(`http://localhost:8081/search-players?q=${encodeURIComponent(searchQuery)}`);
-      console.log(response);
-      setSearchResults(response.data);
-      setError(null);
+      if (searchQuery) {
+        console.log(searchQuery)
+        const response = await axios.get(`http://localhost:8081/search-players?q=${encodeURIComponent(searchQuery)}`);
+        console.log(response);
+        setSearchResults(response.data);
+        setError(null);
+      } else {
+        setSearchResults(null);
+        setError(null);
+      }
     } catch (error) {
       console.error('Error fetching data:', error);
       setError('Error fetching data. Please try again later.');
@@ -26,7 +32,6 @@ const HomePage = () => {
   };
 
   const handlePlayerClick = (playerId) => {
-    // Navigate to PlayerStats component with the playerId as a parameter
     window.location.href = `/players/${playerId}`;
   };
 
@@ -38,22 +43,19 @@ const HomePage = () => {
           <img src="./basketball-2.webp" alt="Ball-IQ Logo" width={64} height={64} />
         </Flex>
         <Box>
-          <Input borderWidth={0} textColor="#212121" borderRadius={[0, 0, 0, 0]} placeholder="Search Players" mx="auto" py={2} w="25%" bgColor="#d4d4d4" _placeholder={{ color:"#212121" }} _focus={{ boxShadow:"none" }} value={searchQuery} onChange={handleInputChange} />
-          {searchResults.length > 0 && (
-            <Box bg="#d4d4d4" pt={4} borderRadius={[0, 0, 0, 0]} w="25%" mx="auto">
+          <Input borderWidth={0} textColor="#212121" borderRadius={[0, 0, 0, 0]} placeholder="Search Players" mx="auto" py={2} w={{lg:"30%", md:"40%", sm:"50%"}} bgColor="#d4d4d4" _placeholder={{ color:"#212121" }} _focus={{ boxShadow:"none" }} value={searchQuery} onChange={handleInputChange} />
+          {searchQuery && searchResults && searchResults.length > 0 ? (
+            <Box bg="#d4d4d4" pt={4} borderRadius={[0, 0, 0, 0]} w={{lg:"30%", md:"40%", sm:"50%"}} mx="auto" overflowY="scroll" maxHeight="60vh">
               <VStack bgColor="rgb(0, 0, 0, 0)" align="stretch" spacing={0} w="100%">
                 {searchResults.map((item, index) => (
                   <Button w="100%" mx={0} my={0} key={index} onClick={() => handlePlayerClick(item.player_id)} bgColor="#d4d4d4" textColor="#212121" borderWidth={0} py={6} borderRadius={0} _hover={{ bgColor: "#a8a8a8"}} >
-                    {item.first_name} {item.last_name}
+                    {item.team_abrev} - {item.full_name}: {item.pos[0]}, {item.height[0] + "'" + item.height[2] + (item.height[3] ? item.height[3] : "")}
                   </Button>
                 ))}
               </VStack>
             </Box>
-          )}
+          ) : null}
         </Box>
-        {/* <Button width="20%" mx="auto" my={2} bgColor="#e6791e" borderWidth="0" textColor="#212121" onClick={handleSearch} _hover={{ bgColor: "#f58e38" }}>
-          Search
-        </Button> */}
       </Flex>
     </Box>
   );

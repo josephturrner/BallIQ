@@ -1,21 +1,55 @@
--- Table to store information about teams
 CREATE TABLE teams (
-    team_id INT PRIMARY KEY,
-    abbreviation VARCHAR(3),
-    city VARCHAR(50),
-    conference VARCHAR(50),
-    division VARCHAR(50),
-    full_name VARCHAR(100)
+    team_id VARCHAR(50) PRIMARY KEY,
+    team_name VARCHAR(50),
+    abrev VARCHAR(3),
+    city VARCHAR(50)
 );
 
 -- Table to store information about players
 CREATE TABLE players (
-    player_id INT PRIMARY KEY,
-    first_name VARCHAR(50),
-    last_name VARCHAR(50),
-    team_id INT,
-    FOREIGN KEY (team_id) REFERENCES teams (team_id)
+    player_id VARCHAR(50) PRIMARY KEY,
+    full_name VARCHAR(50),
+    num VARCHAR(3),
+    pos VARCHAR(15),
+    height VARCHAR(6),
+    team_abrev VARCHAR(3),
+    team VARCHAR(50),
+    FOREIGN KEY (team) REFERENCES teams (team_id)
 );
+
+-- Insert every team into database manually. Data used to get API requests for players when the database is initialized
+-- INSERT INTO teams
+-- VALUES
+--     ('Atlanta', 'Hawks', 'ATL'),
+--     ('Boston', 'Celtics', 'BOS'),
+--     ('Brooklyn', 'Nets', 'BRK'),
+--     ('Charlotte', 'Hornets', 'CHO'),
+--     ('Chicago', 'Bulls', 'CHI'),
+--     ('Cleveland', 'Caveliers', 'CLE'),
+--     ('Dallas', 'Mavericks', 'DAL'),
+--     ('Denver', 'Nuggets', 'DEN'),
+--     ('Detroit', 'Pistons', 'DET'),
+--     ('Golden State', 'Warriors', 'GSW'),
+--     ('Houston', 'Rockets', 'HOU'),
+--     ('Indiana', 'Pacers', 'IND'),
+--     ('Los Angeles', 'Clippers', 'LAC'),
+--     ('Los Angeles', 'Lakers', 'LAL'),
+--     ('Memphis', 'Grizzlies', 'MEM'),
+--     ('Miami', 'Heat', 'MIA'),
+--     ('Milwaukee', 'Bucks', 'MIL'),
+--     ('Minnesota', 'Timberwolves', 'MIN'),
+--     ('New Orleans', 'Pelicans', 'NOP'),
+--     ('New York', 'Knicks', 'NYK'),
+--     ('Oklahoma City', 'Thunder', 'OKC'),
+--     ('Orlando', 'Magic', 'ORL'),
+--     ('Philadelphia', '76ers', 'PHI'),
+--     ('Phoenix', 'Suns', 'PHO'),
+--     ('Portland', 'Trailblazers', 'POR'),
+--     ('Sacramento', 'Kings', 'SAC'),
+--     ('San Antonio', 'Spurs', 'SAS'),
+--     ('Toronto', 'Raptors', 'TOR'),
+--     ('Utah', 'Jazz', 'UTA'),
+--     ('Washington', 'Wizards', 'WAS');
 
 -- -- Table to store information about games
 -- CREATE TABLE games (

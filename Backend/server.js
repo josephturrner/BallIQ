@@ -28,45 +28,45 @@ const dbConfig = {
 const pool = mysql.createPool(dbConfig);
 
 // Endpoint to execute a Python script based on the content of the HTTP request
-app.post('/run-python-command', (req, res) => {
-  const pythonCommand = req.body.command;
+// app.post('/run-python-command', (req, res) => {
+//   const pythonCommand = req.body.command;
 
-  exec(pythonCommand, (error, stdout, stderr) => {
-    if (error) {
-      console.error(`Error executing the Python command: ${error.message}`);
-      return res.status(500).json({ error: 'An error occurred while running the Python command.' });
-    }
+//   exec(pythonCommand, (error, stdout, stderr) => {
+//     if (error) {
+//       console.error(`Error executing the Python command: ${error.message}`);
+//       return res.status(500).json({ error: 'An error occurred while running the Python command.' });
+//     }
 
-    res.json({ output: stdout });
-  });
-});
+//     res.json({ output: stdout });
+//   });
+// });
 
-// Endpoint to insert data into the database
-app.post('/add-data', (req, res) => {
-  const data = req.body;
+// // Endpoint to insert data into the database
+// app.post('/add-data', (req, res) => {
+//   const data = req.body;
 
-  // Get a connection from the pool
-  pool.getConnection((err, connection) => {
-    if (err) {
-      console.error('Error getting database connection:', err);
-      return res.status(500).json({ error: 'An error occurred while connecting to the database.' });
-    }
+//   // Get a connection from the pool
+//   pool.getConnection((err, connection) => {
+//     if (err) {
+//       console.error('Error getting database connection:', err);
+//       return res.status(500).json({ error: 'An error occurred while connecting to the database.' });
+//     }
 
-    // Insert data into the 'data' table
-    const query = 'INSERT INTO data (field1, field2) VALUES (?, ?)';
-    connection.query(query, [data.field1, data.field2], (err, result) => {
-      // Release the connection back to the pool
-      connection.release();
+//     // Insert data into the 'data' table
+//     const query = 'INSERT INTO data (field1, field2) VALUES (?, ?)';
+//     connection.query(query, [data.field1, data.field2], (err, result) => {
+//       // Release the connection back to the pool
+//       connection.release();
 
-      if (err) {
-        console.error('Error inserting data:', err);
-        return res.status(500).json({ error: 'An error occurred while inserting data into the database.' });
-      }
+//       if (err) {
+//         console.error('Error inserting data:', err);
+//         return res.status(500).json({ error: 'An error occurred while inserting data into the database.' });
+//       }
 
-      res.json({ message: 'Data added successfully.' });
-    });
-  });
-});
+//       res.json({ message: 'Data added successfully.' });
+//     });
+//   });
+// });
 
 // Endpoint for searching for player from database
 app.get('/search-players', async (req, res) => {
@@ -75,7 +75,7 @@ app.get('/search-players', async (req, res) => {
   try {
     // If there is a search query, construct a SQL query with a WHERE clause to filter the data
     const query = searchQuery
-      ? `SELECT * FROM players WHERE first_name LIKE '%${searchQuery}%' OR last_name LIKE '%${searchQuery}%'`
+      ? `SELECT * FROM players WHERE full_name LIKE '%${searchQuery}%'`
       : '';
 
     // Get a connection from the pool
@@ -111,7 +111,7 @@ app.get('/player-stats/:playerId', (req, res) => {
   const { playerId } = req.params;
 
   // Construct the Python command based on the playerId
-  const pythonCommand = `python3 python-scripts/fetch-player-stats.py ${playerId}`;
+  const pythonCommand = `python python-scripts/fetch-player-data.py ${playerId}`;
 
   exec(pythonCommand, (error, stdout, stderr) => {
     if (error) {
