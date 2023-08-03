@@ -184,35 +184,36 @@ def formatData(input_stats):
     sendStats['regular_season']['career']['SHOOTER_GRADE'] = 'NA'
 
 
-    # For each playoff season
-    for season in range(len(season_playoff_stats['data'])):
+    if season_playoff_stats['data']:
+        # For each playoff season
+        for season in range(len(season_playoff_stats['data'])):
 
-        # Create season object to be populated
-        sendStats['playoffs']['seasons'].append(newSeason())
+            # Create season object to be populated
+            sendStats['playoffs']['seasons'].append(newSeason())
 
-        # Assign each field in sendStats to the corresponding value from the API info
-        for index, field in enumerate(season_playoff_stats['headers']):
+            # Assign each field in sendStats to the corresponding value from the API info
+            for index, field in enumerate(season_playoff_stats['headers']):
 
-            # PLAYER_ID and LEAGUE_ID are not used because this is an NBA application
+                # PLAYER_ID and LEAGUE_ID are not used because this is an NBA application
+                if field != 'PLAYER_ID' and field != 'LEAGUE_ID':
+                    sendStats['playoffs']['seasons'][season][field] = season_playoff_stats['data'][season][index]
+            
+            sendStats['playoffs']['seasons'][season]['SHOOTER_GRADE'] = getShooterGrade(sendStats['playoffs']['seasons'][season]['FGA'] - sendStats['playoffs']['seasons'][season]['FG3A'], sendStats['playoffs']['seasons'][season]["FGM"] - sendStats['playoffs']['seasons'][season]['FG3M'], sendStats['playoffs']['seasons'][season]['FG3A'], sendStats['playoffs']['seasons'][season]['FG3M'], sendStats['playoffs']['seasons'][season]["SEASON_ID"])
+
+
+        # Init career season
+        sendStats['playoffs']['career'] = newSeason()
+
+        # Same as season
+        for index, field in enumerate(career_playoff_stats['headers']):
             if field != 'PLAYER_ID' and field != 'LEAGUE_ID':
-                sendStats['playoffs']['seasons'][season][field] = season_playoff_stats['data'][season][index]
+                sendStats['playoffs']['career'][field] = career_playoff_stats['data'][0][index]
         
-        sendStats['playoffs']['seasons'][season]['SHOOTER_GRADE'] = getShooterGrade(sendStats['playoffs']['seasons'][season]['FGA'] - sendStats['playoffs']['seasons'][season]['FG3A'], sendStats['playoffs']['seasons'][season]["FGM"] - sendStats['playoffs']['seasons'][season]['FG3M'], sendStats['playoffs']['seasons'][season]['FG3A'], sendStats['playoffs']['seasons'][season]['FG3M'], sendStats['playoffs']['seasons'][season]["SEASON_ID"])
-
-
-    # Init career season
-    sendStats['playoffs']['career'] = newSeason()
-
-    # Same as season
-    for index, field in enumerate(career_playoff_stats['headers']):
-        if field != 'PLAYER_ID' and field != 'LEAGUE_ID':
-            sendStats['playoffs']['career'][field] = career_playoff_stats['data'][0][index]
-    
-    # Fill data not included by the career stats
-    sendStats['playoffs']['career']['TEAM_ABBREVIATION'] = 'TOT'
-    sendStats['playoffs']['career']['SEASON_ID'] = 'Career'
-    sendStats['playoffs']['career']['PLAYER_AGE'] = sendStats['regular_season']['seasons'][len(sendStats['regular_season']['seasons'])-1]['PLAYER_AGE']
-    sendStats['playoffs']['career']['SHOOTER_GRADE'] = 'NA'
+        # Fill data not included by the career stats
+        sendStats['playoffs']['career']['TEAM_ABBREVIATION'] = 'TOT'
+        sendStats['playoffs']['career']['SEASON_ID'] = 'Career'
+        sendStats['playoffs']['career']['PLAYER_AGE'] = sendStats['regular_season']['seasons'][len(sendStats['regular_season']['seasons'])-1]['PLAYER_AGE']
+        sendStats['playoffs']['career']['SHOOTER_GRADE'] = 'NA'
 
     return json.dumps(sendStats)
 

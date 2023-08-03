@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Heading, Table, Thead, Tbody, Tr, Th, Td, Flex, Button, ButtonGroup } from '@chakra-ui/react';
+import { Box, Heading, Table, Thead, Tbody, Tr, Th, Td, Flex, Button, ButtonGroup, Center } from '@chakra-ui/react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 
@@ -9,9 +9,14 @@ function PlayerStats() {
   const [error, setError] = useState(null);
   const [playerStatsData, setPlayerStatsData] = useState({});
   const [selectedOption, setSelectedOption] = useState('Regular Season');
+  const [loadingText, setLoadingText] = useState('Loading');
 
   const handleOptionChange = (season_mode) => {
-    setSelectedOption(season_mode);
+    if (playerStatsData.playoffs) {
+      setSelectedOption(season_mode);
+    } else {
+      setSelectedOption('Regular Season')
+    }
   };
   
   // Get the data source based on the selected option
@@ -34,12 +39,61 @@ function PlayerStats() {
     fetchPlayerStats();
   }, [playerId]);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setLoadingText(prevText => {
+        switch (prevText) {
+          case 'Loading':
+            return 'Loading.';
+          case 'Loading.':
+            return 'Loading..';
+          case 'Loading..':
+            return 'Loading...';
+          default:
+            return 'Loading';
+        }
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   if (loading) {
-    return <p>Loading...</p>;
+    return ( 
+      <Box bg="#212121" px={8} minHeight="100vh" display="flex" flexDirection="column" alignItems="center" overflow="auto">
+        <Flex direction="column" textAlign="center" align="center" justify="center" width="85%" textColor="#d4d4d4" mx="auto" borderRadius={24}>
+          <Flex w="wrap-content" textAlign="center" align="center" justify="center" py={2} mt={4} mx="auto" borderRadius={24}>
+            <Heading as="h1" fontSize={60} px={8} textDecoration="underline" bgGradient="linear(to-br, #e6791e, #666565)" bgClip="text">Ball IQ</Heading>
+            <img src="../../basketball-2.webp" alt="Ball-IQ Logo" width={64} height={64} />
+          </Flex>
+          <Center mt={12} h="100%">
+            <Heading fontSize={40} bgGradient="linear(to-br, #e6791e, #666565)" bgClip="text">
+              {loadingText}
+            </Heading>
+          </Center>
+        </Flex>
+      </Box>
+    )
   }
 
   if (error) {
-    return <p>{error}</p>;
+    return (
+      <Box bg="#212121" px={8} minHeight="100vh" display="flex" flexDirection="column" alignItems="center" overflow="auto">
+        <Flex direction="column" textAlign="center" align="center" justify="center" width="85%" textColor="#d4d4d4" mx="auto" borderRadius={24}>
+          <Link to="/" _hover={{ cursor: "pointer" }} w="wrap-content">
+            <Flex w="wrap-content" textAlign="center" align="center" justify="center" py={2} mt={4} mx="auto" borderRadius={24}>
+              <Heading as="h1" fontSize={60} px={8} textDecoration="underline" bgGradient="linear(to-br, #e6791e, #666565)" bgClip="text">Ball IQ</Heading>
+              <img src="../../basketball-2.webp" alt="Ball-IQ Logo" width={64} height={64} />
+            </Flex>
+          </Link>
+          <Center mt={12} h="100%">
+            <Heading fontSize={40} bgGradient="linear(to-br, #e6791e, #666565)" bgClip="text">
+              Error! The API may not be up right now. Try refreshing the page or click the logo to go back to the homepage...
+            </Heading>
+          </Center>
+        </Flex>
+      </Box>
+    );
   }
 
   const dataSource = selectedOption === 'Regular Season' ? playerStatsData.regular_season : playerStatsData.playoffs;
