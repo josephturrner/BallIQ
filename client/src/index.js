@@ -10,7 +10,7 @@ import {
 
 // layouts and pages
 import Homepage from './Homepage'
-import PlayerStats from './PlayerStats'
+import PlayerPage from './PlayerPage'
 import { ChakraProvider } from '@chakra-ui/react'
 import myTheme from './theme'
 
@@ -19,7 +19,7 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Outlet />}>
       <Route index element={<Homepage />} />
-      <Route path="/players/:playerId" element={<PlayerStats />} />
+      <Route path="/players/:playerId" element={<PlayerPage />} />
     </Route>
   )
 )
