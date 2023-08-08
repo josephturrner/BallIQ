@@ -69,13 +69,48 @@ const pool = mysql.createPool(dbConfig);
 // });
 
 // Endpoint for searching for player from database
+app.get('/get-teams', async (req, res) => {
+
+  try {
+    // If there is a search query, construct a SQL query with a WHERE clause to filter the data
+    const query = `SELECT * FROM teams`
+
+    // Get a connection from the pool
+    pool.getConnection((err, connection) => {
+      if (err) {
+        console.error('Error getting database connection:', err);
+        return res.status(500).json({ error: 'An error occurred while connecting to the database.' });
+      }
+
+      // Query the database if there is a query
+      if (query) {
+        connection.query(query, (err, result) => {
+          // Release the connection back to the pool
+          connection.release();
+
+          if (err) {
+            console.error('Error fetching data:', err);
+            return res.status(500).json({ error: 'An error occurred while fetching data from the database.' });
+          }
+
+          res.json(result);
+        });
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    res.status(500).json({ error: 'An error occurred while fetching data from the database.' });
+  }
+});
+
+// Endpoint for searching for player from database
 app.get('/search-players', async (req, res) => {
   const searchQuery = req.query.q; // Extract the search query from the request query parameters
 
   try {
     // If there is a search query, construct a SQL query with a WHERE clause to filter the data
     const query = searchQuery
-      ? `SELECT * FROM players WHERE full_name LIKE '%${searchQuery}%'`
+      ? `SELECT * FROM players P INNER JOIN teams T ON P.team = T.team_id WHERE full_name LIKE '%${searchQuery}%' OR team_name LIKE '%${searchQuery}%'`
       : '';
 
     // Get a connection from the pool
