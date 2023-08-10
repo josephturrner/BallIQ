@@ -5,7 +5,7 @@ from nba_api.stats.endpoints import playercareerstats, commonplayerinfo as cpi, 
 import sys
 import json
 from grade import *
-from knnProj import *
+from pcalrProj import *
 
 # Player ID contained in cli parameters
 PARAMS = sys.argv[1:]
