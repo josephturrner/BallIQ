@@ -9,7 +9,7 @@ function PlayerStats() {
   const [error, setError] = useState(null);
   const [playerStatsData, setPlayerStatsData] = useState({});
   const [selectedOption, setSelectedOption] = useState('Regular Season');
-  const [loadingText, setLoadingText] = useState('Loading');
+  const [loadingText, setLoadingText] = useState('');
 
   const handleOptionChange = (season_mode) => {
     if (playerStatsData.playoffs) {
@@ -43,14 +43,14 @@ function PlayerStats() {
     const interval = setInterval(() => {
       setLoadingText(prevText => {
         switch (prevText) {
-          case 'Loading':
-            return 'Loading.';
-          case 'Loading.':
-            return 'Loading..';
-          case 'Loading..':
-            return 'Loading...';
+          case '':
+            return '.';
+          case '.':
+            return '..';
+          case '..':
+            return '...';
           default:
-            return 'Loading';
+            return '';
         }
       });
     }, 1000);
@@ -66,11 +66,9 @@ function PlayerStats() {
             <Heading as="h1" fontSize={60} px={8} textDecoration="underline" bgGradient="linear(to-br, #e6791e, #666565)" bgClip="text">Ball IQ</Heading>
             <img src="../../basketball-2.webp" alt="Ball-IQ Logo" width={64} height={64} />
           </Flex>
-          <Center mt={12} h="100%">
-            <Heading fontSize={40} bgGradient="linear(to-br, #e6791e, #666565)" bgClip="text">
-              {loadingText}
-            </Heading>
-          </Center>
+          <Heading mx="auto" my="auto" fontSize={40} bgGradient="linear(to-br, #e6791e, #666565)" bgClip="text">
+            {loadingText}
+          </Heading>
         </Flex>
       </Box>
     )
@@ -79,7 +77,7 @@ function PlayerStats() {
   if (error) {
     return (
       <Box bg="#212121" px={8} minHeight="100vh" display="flex" flexDirection="column" alignItems="center" overflow="auto">
-        <Flex direction="column" textAlign="center" align="center" justify="center" width="85%" textColor="#d4d4d4" mx="auto" borderRadius={24}>
+        <Flex direction="column" textAlign="center" align="center" justify="center" width="50%" textColor="#d4d4d4" mx="auto" borderRadius={24}>
           <Link to="/" _hover={{ cursor: "pointer" }} w="wrap-content">
             <Flex w="wrap-content" textAlign="center" align="center" justify="center" py={2} mt={4} mx="auto" borderRadius={24}>
               <Heading as="h1" fontSize={60} px={8} textDecoration="underline" bgGradient="linear(to-br, #e6791e, #666565)" bgClip="text">Ball IQ</Heading>
@@ -102,17 +100,20 @@ function PlayerStats() {
     <Box bg="#212121" px={8} minHeight="100vh" display="flex" flexDirection="column" alignItems="center" overflow="auto">
       <Flex direction="column" textAlign="center" align="center" justify="center" width="85%" textColor="#d4d4d4" mx="auto" borderRadius={24}>
         <Link to="/" _hover={{ cursor: "pointer" }} w="wrap-content">
-          <Flex w="wrap-content" textAlign="center" align="center" justify="center" py={2} mt={4} mx="auto" borderRadius={24}>
+          <Flex w="wrap-content" textAlign="center" align="center" justify="center" py={2} my={4} mx="auto" borderRadius={24}>
             <Heading as="h1" fontSize={60} px={8} textDecoration="underline" bgGradient="linear(to-br, #e6791e, #666565)" bgClip="text">Ball IQ</Heading>
             <img src="../../basketball-2.webp" alt="Ball-IQ Logo" width={64} height={64} />
           </Flex>
         </Link>
-        <Heading mt={2} mb={2} fontSize={32} textColor="#d4d4d4">
+        {/* <Heading mt={2} mb={2} fontSize={32} textColor="#d4d4d4">
           {playerStatsData.full_name}
-        </Heading>
+        </Heading> */}
       </Flex>
       <Box mt={0}>
-        <ButtonGroup isAttached w="100%">
+        <Heading display="inline" mt={2} mb={2} mr={6} fontSize={32} textColor="#d4d4d4">
+          {playerStatsData.full_name}
+        </Heading>
+        <ButtonGroup ml={6} display="inline" isAttached w="100%">
           <Button bg={selectedOption === "Regular Season" ? "#e6791e" : "#212121"} textColor={selectedOption === "Regular Season" ? "#212121" : "#e6791e"} _hover={selectedOption === "Regular Season" ? {bg:"#e6791e", cursor:"default"} : {bg:"#666565"}} onClick={() => handleOptionChange('Regular Season')} borderRadius={2}>
             Regular Season
           </Button>
@@ -121,7 +122,7 @@ function PlayerStats() {
           </Button>
         </ButtonGroup>
       </Box>
-      <Box overflowX="auto" mx="auto" width="90%" h="69vh">
+      <Box overflowX="auto" mx="auto" width="90%" maxH="69vh">
         <Table textAlign="center" width="100%" mx="auto">
           <Thead>
             <Tr bg="#212121" position="sticky" top="0" zIndex="1">
@@ -210,8 +211,8 @@ function PlayerStats() {
         </Table>
       </Box>
       {dataSource.PTS_PROJ && (
-        <Box fontWeight="bold" w="20%" bg="#212121" textColor="#e6791e" textAlign="center">
-          Projected PTS for next season: {dataSource.PTS_PROJ}
+        <Box mt={4} fontSize={18} mx="auto" fontWeight="bold" w="wrap-content" bg="#212121" textColor="#e6791e" textAlign="center">
+          Projected PTS for next season: <p style={{ display: "inline", color: "#d4d4d4" }}>{dataSource.PTS_PROJ}</p>
         </Box>
       )}
     </Box>

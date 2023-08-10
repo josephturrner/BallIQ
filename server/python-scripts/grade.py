@@ -61,21 +61,20 @@ def getShooterGrade(player_2_fga, player_2_fgm, player_3_fga, player_3_fgm, seas
 
     # Final grade quantifier
     grade_num = (weight_2*grade_2P) + (weight_3*grade_3P)
-    
-    # Grade definitions - meant to be more efficient than if...elif...else statement
+
     grade_map = {
-        (0.55, float('inf')): 'A+',
-        (0.5, 0.55): 'A',
-        (0.475, 0.5): 'A-',
-        (0.45, 0.475): 'B+',
-        (0.425, 0.45): 'B',
-        (0.4, 0.425): 'B-',
-        (0.375, 0.4): 'C+',
-        (0.35, 0.375): 'C',
-        (0.325, 0.35): 'C-',
-        (0.3, 0.325): 'D+',
-        (0.275, 0.3): 'D-',
-        (-float('inf'), 0.275): 'F',
+        (1.3, float('inf')): 'A+',
+        (1.25, 1.3): 'A',
+        (1.2, 1.25): 'A-',
+        (1.1, 1.2): 'B+',
+        (1, 1.1): 'B',
+        (0.9, 1): 'B-',
+        (0.8, 0.9): 'C+',
+        (0.7, 0.8): 'C',
+        (0.6, 0.7): 'C-',
+        (0.5, 0.6): 'D+',
+        (0.4, 0.5): 'D-',
+        (-float('inf'), 0.4): 'F',
     }
 
     # Classify grade based on grade_num and grade definitions
