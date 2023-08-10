@@ -107,11 +107,11 @@ function PlayerStats() {
             <img src="../../basketball-2.webp" alt="Ball-IQ Logo" width={64} height={64} />
           </Flex>
         </Link>
-        <Heading mt={4} mb={2} fontSize={32} textColor="#d4d4d4">
+        <Heading mt={2} mb={2} fontSize={32} textColor="#d4d4d4">
           {playerStatsData.full_name}
         </Heading>
       </Flex>
-      <Box mt={2}>
+      <Box mt={0}>
         <ButtonGroup isAttached w="100%">
           <Button bg={selectedOption === "Regular Season" ? "#e6791e" : "#212121"} textColor={selectedOption === "Regular Season" ? "#212121" : "#e6791e"} _hover={selectedOption === "Regular Season" ? {bg:"#e6791e", cursor:"default"} : {bg:"#666565"}} onClick={() => handleOptionChange('Regular Season')} borderRadius={2}>
             Regular Season
@@ -209,6 +209,11 @@ function PlayerStats() {
           </Tbody>
         </Table>
       </Box>
+      {dataSource.PTS_PROJ && (
+        <Box fontWeight="bold" w="20%" bg="#212121" textColor="#e6791e" textAlign="center">
+          Projected PTS for next season: {dataSource.PTS_PROJ}
+        </Box>
+      )}
     </Box>
   );
 }
