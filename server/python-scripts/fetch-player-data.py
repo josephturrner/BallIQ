@@ -6,6 +6,7 @@ import sys
 import json
 from grade import *
 from pcalrProj import *
+import getLogos as im
 
 # Player ID contained in cli parameters
 PARAMS = sys.argv[1:]
@@ -61,6 +62,7 @@ def formatData(input_stats):
         # PLAYER_ID already defined
         "player_id": PLAYER_ID,
         "full_name": cpi.CommonPlayerInfo(PLAYER_ID).common_player_info.get_data_frame().loc[0]['DISPLAY_FIRST_LAST'],
+        "headshot": im.Headshot(PLAYER_ID).image,
 
         # Keep seasons and career separate because they will be displayed separately
         "regular_season": {

@@ -1,0 +1,26 @@
+.search-input::-webkit-scrollbar {
+    scrollbar-width: none;
+    display: none;
+}
+
+.search-input {
+    display: flex;
+    scrollbar-width: none;
+    border: 2px solid #d4d4d4;
+    background-color: #d4d4d4;
+    /* padding: 3vh 0.5vw; */
+    border-radius: 0 0 0 0;
+    width: 40%;
+    margin: 0 auto;
+    overflow-y: scroll;
+    max-height: 42.5vh;
+    /* borderWidth="0px" bg="#212121" pt={0} borderRadius={[0, 0, 0, 0]} w={{lg:"30%", md:"40%", sm:"50%"}} mx="auto" overflowY="scroll" maxHeight="40vh" */
+}
+
+.result-headshot {
+    width: 20%;
+}
+
+.player-result:hover .result-headshot {
+    width: 25% !important;
+}

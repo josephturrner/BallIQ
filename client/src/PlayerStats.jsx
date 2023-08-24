@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Heading, Table, Thead, Tbody, Tr, Th, Td, Flex, Button, ButtonGroup, Center } from '@chakra-ui/react';
+import { Box, Heading, Table, Thead, Tbody, Tr, Th, Td, Flex, Button, ButtonGroup, Center, Image } from '@chakra-ui/react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 
@@ -22,10 +22,10 @@ function PlayerStats() {
   // Get the data source based on the selected option
 
   useEffect(() => {
-    const fetchPlayerStats = async () => {
+    const fetchData = async () => {
       try {
         const response = await axios.get(`http://localhost:8081/player-stats/${playerId}`);
-        console.log(response.data)
+        console.log(response.data);
         setPlayerStatsData(response.data);
         setLoading(false);
         setError(null);
@@ -35,38 +35,37 @@ function PlayerStats() {
         setLoading(false);
       }
     };
-
-    fetchPlayerStats();
-  }, [playerId]);
-
-  useEffect(() => {
+  
+    fetchData(); // Fetch data on component mount
+  
     const interval = setInterval(() => {
-      setLoadingText(prevText => {
-        switch (prevText) {
-          case '':
-            return '.';
-          case '.':
-            return '..';
-          case '..':
-            return '...';
-          default:
-            return '';
-        }
-      });
+      if (loading) {
+        setLoadingText((prevText) => {
+          switch (prevText) {
+            case '':
+              return '.';
+            case '.':
+              return '..';
+            case '..':
+              return '...';
+            default:
+              return '';
+          }
+        });
+      }
     }, 1000);
-
     return () => clearInterval(interval);
-  }, []);
+  }, [playerId, loading])
 
   if (loading) {
     return ( 
       <Box bg="#212121" px={8} minHeight="100vh" display="flex" flexDirection="column" alignItems="center" overflow="auto">
         <Flex direction="column" textAlign="center" align="center" justify="center" width="85%" textColor="#d4d4d4" mx="auto" borderRadius={24}>
           <Flex w="wrap-content" textAlign="center" align="center" justify="center" py={2} mt={4} mx="auto" borderRadius={24}>
-            <Heading as="h1" fontSize={60} px={8} textDecoration="underline" bgGradient="linear(to-br, #e6791e, #666565)" bgClip="text">Ball IQ</Heading>
+            <Heading as="h1" fontSize={60} px={8} textDecoration="underline" bgGradient="linear(to-br, #e6791e, #d4d4d4)" bgClip="text">BALL IQ</Heading>
             <img src="../../basketball-2.webp" alt="Ball-IQ Logo" width={64} height={64} />
           </Flex>
-          <Heading mx="auto" my="auto" fontSize={40} bgGradient="linear(to-br, #e6791e, #666565)" bgClip="text">
+          <Heading mx="auto" my="auto" fontSize={40} bgGradient="linear(to-br, #e6791e, #d4d4d4)" bgClip="text">
             {loadingText}
           </Heading>
         </Flex>
@@ -80,12 +79,12 @@ function PlayerStats() {
         <Flex direction="column" textAlign="center" align="center" justify="center" width="50%" textColor="#d4d4d4" mx="auto" borderRadius={24}>
           <Link to="/" _hover={{ cursor: "pointer" }} w="wrap-content">
             <Flex w="wrap-content" textAlign="center" align="center" justify="center" py={2} mt={4} mx="auto" borderRadius={24}>
-              <Heading as="h1" fontSize={60} px={8} textDecoration="underline" bgGradient="linear(to-br, #e6791e, #666565)" bgClip="text">Ball IQ</Heading>
+              <Heading as="h1" fontSize={60} px={8} textDecoration="underline" bgGradient="linear(to-br, #e6791e, #d4d4d4)" bgClip="text">BALL IQ</Heading>
               <img src="../../basketball-2.webp" alt="Ball-IQ Logo" width={64} height={64} />
             </Flex>
           </Link>
           <Center mt={12} h="100%">
-            <Heading fontSize={40} bgGradient="linear(to-br, #e6791e, #666565)" bgClip="text">
+            <Heading fontSize={40} bgGradient="linear(to-br, #e6791e, #d4d4d4)" bgClip="text">
               Error! The API may not be up right now. Try refreshing the page or click the logo to go back to the homepage...
             </Heading>
           </Center>
@@ -101,19 +100,17 @@ function PlayerStats() {
       <Flex direction="column" textAlign="center" align="center" justify="center" width="85%" textColor="#d4d4d4" mx="auto" borderRadius={24}>
         <Link to="/" _hover={{ cursor: "pointer" }} w="wrap-content">
           <Flex w="wrap-content" textAlign="center" align="center" justify="center" py={2} my={4} mx="auto" borderRadius={24}>
-            <Heading as="h1" fontSize={60} px={8} textDecoration="underline" bgGradient="linear(to-br, #e6791e, #666565)" bgClip="text">Ball IQ</Heading>
+            <Heading as="h1" fontSize={60} px={8} textDecoration="underline" bgGradient="linear(to-br, #e6791e, #d4d4d4)" bgClip="text">BALL IQ</Heading>
             <img src="../../basketball-2.webp" alt="Ball-IQ Logo" width={64} height={64} />
           </Flex>
         </Link>
-        {/* <Heading mt={2} mb={2} fontSize={32} textColor="#d4d4d4">
-          {playerStatsData.full_name}
-        </Heading> */}
       </Flex>
       <Box mt={0}>
-        <Heading display="inline" mt={2} mb={2} mr={6} fontSize={32} textColor="#d4d4d4">
+        <Image maxH="350px" maxW="350px" w="100%" h="100%" src={`data:image/png;base64,${playerStatsData.headshot}`}/>
+        <Heading mt={2} mb={2} mx="auto" textAlign="center" fontSize={32} textColor="#d4d4d4">
           {playerStatsData.full_name}
         </Heading>
-        <ButtonGroup ml={6} display="inline" isAttached w="100%">
+        <ButtonGroup mx="auto" isAttached w="100%">
           <Button bg={selectedOption === "Regular Season" ? "#e6791e" : "#212121"} textColor={selectedOption === "Regular Season" ? "#212121" : "#e6791e"} _hover={selectedOption === "Regular Season" ? {bg:"#e6791e", cursor:"default"} : {bg:"#666565"}} onClick={() => handleOptionChange('Regular Season')} borderRadius={2}>
             Regular Season
           </Button>

@@ -110,7 +110,7 @@ app.get('/search-players', async (req, res) => {
   try {
     // If there is a search query, construct a SQL query with a WHERE clause to filter the data
     const query = searchQuery
-      ? `SELECT * FROM players P INNER JOIN teams T ON P.team = T.team_id WHERE full_name LIKE '%${searchQuery}%' OR team_name LIKE '%${searchQuery}%'`
+      ? `SELECT player_id, full_name, num, pos, height, abrev, headshot, logo FROM players P INNER JOIN teams T ON P.team = T.team_id WHERE full_name LIKE '%${searchQuery}%' OR team_name LIKE '%${searchQuery}%' LIMIT 10`
       : '';
 
     // Get a connection from the pool
@@ -162,7 +162,7 @@ app.get('/player-stats/:playerId', (req, res) => {
       console.error('Error parsing the Python output:', parseError);
       return res.status(500).json({ error: 'An error occurred while parsing the Python output.' });
     }
-
+    
     res.json(playerStatsData);
   });
 });

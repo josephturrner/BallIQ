@@ -2,7 +2,8 @@ CREATE TABLE teams (
     team_id VARCHAR(50) PRIMARY KEY,
     team_name VARCHAR(50),
     abrev VARCHAR(3),
-    city VARCHAR(50)
+    city VARCHAR(50),
+    logo TEXT
 );
 
 -- Table to store information about players
@@ -12,10 +13,12 @@ CREATE TABLE players (
     num VARCHAR(3),
     pos VARCHAR(15),
     height VARCHAR(6),
-    team_abrev VARCHAR(3),
     team VARCHAR(50),
+    headshot MEDIUMTEXT,
     FOREIGN KEY (team) REFERENCES teams (team_id)
 );
+
+
 
 -- Insert every team into database manually. Data used to get API requests for players when the database is initialized
 -- INSERT INTO teams
